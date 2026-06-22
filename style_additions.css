@@ -1,0 +1,220 @@
+
+/* ═══════════════════════════════════════════════════════
+   SENTINEL AI — Loading Screen Styles
+   ═══════════════════════════════════════════════════════ */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loading-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(0,102,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(124,58,237,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+  width: min(420px, 90vw);
+}
+
+.loading-shield {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  animation: spinRing 2s linear infinite;
+}
+
+.loading-ring.lr1 {
+  border-top-color: var(--accent-cyan);
+  border-right-color: rgba(0,212,255,0.3);
+  animation-duration: 1.8s;
+}
+
+.loading-ring.lr2 {
+  inset: -12px;
+  border-bottom-color: rgba(124,58,237,0.5);
+  border-left-color: rgba(124,58,237,0.2);
+  animation-duration: 3s;
+  animation-direction: reverse;
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.loading-brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.loading-brand span {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 20px rgba(0,212,255,0.5);
+}
+
+.loading-tagline {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: -12px;
+}
+
+.loading-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: rgba(0,212,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(0,212,255,0.5);
+}
+
+.loading-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.loading-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  justify-content: center;
+}
+
+.lm {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  transition: color 0.3s, text-shadow 0.3s;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Particle Canvas ─── */
+.particle-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── IOC Feed Items (for WS injections) ─── */
+.ioc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  animation: slideIn 0.3s ease;
+}
+
+.ioc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: rgba(0,212,255,0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0,212,255,0.2);
+  min-width: 52px;
+  text-align: center;
+}
+
+.ioc-badge.ioc-ip     { background: rgba(255,23,68,0.1);  color: var(--accent-red);    border-color: rgba(255,23,68,0.2); }
+.ioc-badge.ioc-domain { background: rgba(255,109,0,0.1);  color: var(--accent-orange); border-color: rgba(255,109,0,0.2); }
+.ioc-badge.ioc-url    { background: rgba(124,58,237,0.1); color: #a78bfa;              border-color: rgba(124,58,237,0.2); }
+.ioc-badge.ioc-email  { background: rgba(0,230,118,0.1);  color: var(--accent-green);  border-color: rgba(0,230,118,0.2); }
+.ioc-badge.ioc-hash   { background: rgba(255,214,0,0.1);  color: var(--accent-yellow); border-color: rgba(255,214,0,0.2); }
+.ioc-badge.ioc-phone  { background: rgba(0,102,255,0.1);  color: var(--accent-blue);   border-color: rgba(0,102,255,0.2); }
+
+.ioc-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.ioc-sev {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sev-critical { background: rgba(255,23,68,0.15);  color: var(--accent-red); }
+.sev-high     { background: rgba(255,109,0,0.15);  color: var(--accent-orange); }
+.sev-medium   { background: rgba(255,214,0,0.1);   color: var(--accent-yellow); }
+.sev-low      { background: rgba(0,230,118,0.1);   color: var(--accent-green); }
+
+.ioc-src {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ─── Alert item pulse highlight ─── */
+.alert-item:first-child {
+  animation: alertHighlight 2s ease forwards;
+}
+
+@keyframes alertHighlight {
+  0%   { background: rgba(0,212,255,0.08); }
+  100% { background: transparent; }
+}
+
+/* ─── Responsive additions ─── */
+@media (max-width: 768px) {
+  .loading-modules { display: none; }
+  .loading-brand { font-size: 22px; }
+}

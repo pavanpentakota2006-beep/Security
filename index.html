@@ -1,0 +1,1133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SENTINEL AI  Digital Public Safety Intelligence Platform</title>
+  <meta name="description" content="AI-powered platform for law enforcement, financial institutions, and citizens to detect, disrupt, and respond to digital fraud networks, counterfeit currency, and organised scam operations." />
+  <meta property="og:title" content="SENTINEL AI  Digital Public Safety Intelligence" />
+  <meta property="og:description" content="Proactive threat neutralisation against digital fraud, counterfeit currency, and organised scam networks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-inner">
+    <div class="loading-shield">
+      <svg width="64" height="64" viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L3 7.5V14C3 19.55 7.84 24.74 14 26C20.16 24.74 25 19.55 25 14V7.5L14 2Z"
+          fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.6)" stroke-width="0.8"/>
+        <path d="M10 14L13 17L18 11" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="loading-ring lr1"></div>
+      <div class="loading-ring lr2"></div>
+    </div>
+    <div class="loading-brand">SENTINEL <span>AI</span></div>
+    <div class="loading-tagline">Digital Public Safety Intelligence Platform</div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+    <div class="loading-status" id="loadingStatus">Initialising threat intelligence engines...</div>
+    <div class="loading-modules" id="loadingModules">
+      <span class="lm" id="lm1">— Fraud Detection</span>
+      <span class="lm" id="lm2">— Network Mapper</span>
+      <span class="lm" id="lm3">— Forensics AI</span>
+      <span class="lm" id="lm4">— Scam Monitor</span>
+      <span class="lm" id="lm5">— Intelligence Feed</span>
+    </div>
+  </div>
+</div>
+
+<!-- ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• PARTICLE CANVAS -->
+<canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+<!-- ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L3 7.5V14C3 19.55 7.84 24.74 14 26C20.16 24.74 25 19.55 25 14V7.5L14 2Z" fill="url(#shieldGrad)" stroke="rgba(0,212,255,0.4)" stroke-width="0.5"/>
+        <path d="M10 14L13 17L18 11" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="14" cy="14" r="3" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="0.5">
+          <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <defs>
+          <linearGradient id="shieldGrad" x1="3" y1="2" x2="25" y2="26" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0a1628"/>
+            <stop offset="1" stop-color="#0d2040"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">SENTINEL</span>
+      <span class="brand-sub">AI Intelligence</span>
+    </div>
+    <div class="threat-level-badge" id="globalThreatBadge">
+      <span class="tl-label">THREAT</span>
+      <span class="tl-value" id="globalThreatLevel">HIGH</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">COMMAND CENTER</div>
+    <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zm10 0a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+      <span>Command Dashboard</span>
+      <span class="nav-badge">LIVE</span>
+    </a>
+    <a href="#" class="nav-item" data-page="fraud" id="nav-fraud">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
+      <span>Fraud Network Mapper</span>
+      <span class="nav-count" id="fraudCount">247</span>
+    </a>
+    <a href="#" class="nav-item" data-page="counterfeit" id="nav-counterfeit">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+      <span>Counterfeit Detector</span>
+      <span class="nav-count" id="counterCount">89</span>
+    </a>
+    <a href="#" class="nav-item" data-page="scams" id="nav-scams">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+      <span>Scam Operations</span>
+      <span class="nav-count" id="scamCount">512</span>
+    </a>
+    <a href="#" class="nav-item" data-page="threats" id="nav-threats">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+      <span>Threat Intelligence</span>
+      <span class="nav-badge urgent">!</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:16px">OPERATIONS</div>
+    <a href="#" class="nav-item" data-page="cases" id="nav-cases">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v6a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+      <span>Case Management</span>
+    </a>
+    <a href="#" class="nav-item" data-page="analytics" id="nav-analytics">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+      <span>Predictive Analytics</span>
+    </a>
+    <a href="#" class="nav-item" data-page="citizen" id="nav-citizen">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+      <span>Citizen Portal</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:16px">SYSTEM</div>
+    <a href="#" class="nav-item" data-page="settings" id="nav-settings">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="agent-status">
+      <div class="agent-avatar">SA</div>
+      <div class="agent-info">
+        <span class="agent-name">Supt. Admin</span>
+        <span class="agent-role">Senior Analyst</span>
+      </div>
+      <div class="agent-online"></div>
+      <button id="logoutBtn" title="Logout" style="background:none;border:none;cursor:pointer;padding:4px;color:rgba(232,244,255,0.4);margin-left:auto;transition:color 0.2s;" onmouseover="this.style.color='#ff1744'" onmouseout="this.style.color='rgba(232,244,255,0.4)'">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• MAIN -->
+<main class="main-content" id="mainContent">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="page-title-area">
+        <h1 class="page-title" id="pageTitle">Command Dashboard</h1>
+        <span class="page-breadcrumb" id="pageBreadcrumb">SENTINEL AI / Overview</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-bar">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search threats, cases, entities..." autocomplete="off" />
+        <kbd>Œ˜K</kbd>
+      </div>
+      <button class="icon-btn" id="alertsBtn" aria-label="Alerts">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zm0 16a3 3 0 01-2.83-2H12.83A3 3 0 0110 18z"/></svg>
+        <span class="icon-btn-badge" id="alertBadge">7</span>
+      </button>
+      <button class="icon-btn" aria-label="Refresh feed">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="topbar-time" id="topbarTime"></div>
+    </div>
+  </header>
+
+  <!-- ”€”€”€”€”€”€”€”€”€”€”€”€ ALERT BANNER ”€”€”€”€”€”€”€”€”€”€”€”€ -->
+  <div class="alert-banner" id="alertBanner">
+    <div class="alert-banner-inner">
+      <span class="alert-pulse"></span>
+      <strong>LIVE ALERT:</strong>&nbsp;
+      <span id="alertText">Coordinated phishing campaign detected targeting 3 major banks  1,247 accounts at risk. AI models have flagged 89 suspicious IPs.</span>
+      <button class="alert-dismiss" id="alertDismiss">œ•</button>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: DASHBOARD •••••••••••••••••••••••• -->
+  <div class="page active" id="page-dashboard">
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+      <div class="kpi-card" id="kpi-threats">
+        <div class="kpi-icon threat"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiThreats">2,847</div>
+          <div class="kpi-label">Active Threats</div>
+          <div class="kpi-delta negative">†‘ 14.2% from yesterday</div>
+        </div>
+        <div class="kpi-sparkline"><canvas id="sparkline1" width="80" height="32"></canvas></div>
+      </div>
+      <div class="kpi-card" id="kpi-fraud">
+        <div class="kpi-icon fraud"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg></div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiFraud">‚¹ 48.3Cr</div>
+          <div class="kpi-label">Fraud Intercepted</div>
+          <div class="kpi-delta positive">†‘ 31.7% this month</div>
+        </div>
+        <div class="kpi-sparkline"><canvas id="sparkline2" width="80" height="32"></canvas></div>
+      </div>
+      <div class="kpi-card" id="kpi-networks">
+        <div class="kpi-icon network"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg></div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiNetworks">183</div>
+          <div class="kpi-label">Crime Networks Mapped</div>
+          <div class="kpi-delta positive">12 neutralised today</div>
+        </div>
+        <div class="kpi-sparkline"><canvas id="sparkline3" width="80" height="32"></canvas></div>
+      </div>
+      <div class="kpi-card" id="kpi-ai">
+        <div class="kpi-icon ai"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/></svg></div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiAI">99.2%</div>
+          <div class="kpi-label">AI Detection Accuracy</div>
+          <div class="kpi-delta positive">†‘ 0.4% improvement</div>
+        </div>
+        <div class="kpi-sparkline"><canvas id="sparkline4" width="80" height="32"></canvas></div>
+      </div>
+    </div>
+
+    <!-- MAIN DASHBOARD GRID -->
+    <div class="dashboard-grid">
+
+      <!-- Network Map -->
+      <div class="card card-network">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Live Fraud Network Graph</div>
+            <div class="card-subtitle">Real-time entity relationship mapping · AI-powered link analysis</div>
+          </div>
+          <div class="card-actions">
+            <button class="chip active" id="netFilter-all">All</button>
+            <button class="chip" id="netFilter-critical">Critical</button>
+            <button class="chip" id="netFilter-financial">Financial</button>
+            <span class="live-indicator"><span class="pulse-dot"></span>LIVE</span>
+          </div>
+        </div>
+        <div class="network-canvas-wrap">
+          <canvas id="networkCanvas"></canvas>
+          <div class="network-overlay-stats">
+            <div class="overlay-stat"><span id="nodeCount">142</span><small>Nodes</small></div>
+            <div class="overlay-stat"><span id="edgeCount">389</span><small>Links</small></div>
+            <div class="overlay-stat critical"><span id="critNodes">23</span><small>Critical</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Timeline -->
+      <div class="card card-timeline">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Threat Detection Timeline</div>
+            <div class="card-subtitle">Last 24 hours · Predictive horizon: 6h</div>
+          </div>
+          <div class="card-actions">
+            <select class="chip-select" id="timelineFilter">
+              <option value="24h">24H</option>
+              <option value="7d">7D</option>
+              <option value="30d">30D</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="threatTimelineChart"></canvas></div>
+      </div>
+
+      <!-- Live Alerts Feed -->
+      <div class="card card-alerts">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Live Intelligence Feed</div>
+            <div class="card-subtitle">AI-generated alerts · Updated every 30s</div>
+          </div>
+          <span class="live-indicator"><span class="pulse-dot red"></span>LIVE</span>
+        </div>
+        <div class="alerts-feed" id="alertsFeed">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Threat Distribution -->
+      <div class="card card-distribution">
+        <div class="card-header">
+          <div class="card-title">Threat Distribution</div>
+          <div class="card-subtitle">By category · This week</div>
+        </div>
+        <div class="chart-wrap doughnut-wrap">
+          <canvas id="threatDistChart"></canvas>
+          <div class="donut-center">
+            <span class="donut-value">848</span>
+            <span class="donut-label">Total</span>
+          </div>
+        </div>
+        <div class="legend-grid" id="distLegend"></div>
+      </div>
+
+      <!-- Geo Map -->
+      <div class="card card-geo">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Geographic Threat Heatmap</div>
+            <div class="card-subtitle">India · State-level fraud density</div>
+          </div>
+          <button class="btn-ghost" id="geoFilterBtn">Filter Regions</button>
+        </div>
+        <div class="geo-map-container">
+          <canvas id="geoCanvas"></canvas>
+          <div class="geo-legend">
+            <div class="geo-scale">
+              <div class="geo-scale-gradient"></div>
+              <div class="geo-scale-labels"><span>Low</span><span>High</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Predictions -->
+      <div class="card card-predictions">
+        <div class="card-header">
+          <div class="card-title">AI Threat Predictions</div>
+          <div class="card-subtitle">Next 72 hours · Confidence-weighted</div>
+        </div>
+        <div class="predictions-list" id="predictionsList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: FRAUD NETWORK MAPPER •••••••••••••••••••••••• -->
+  <div class="page" id="page-fraud">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">AI-POWERED</div>
+        <h2>Fraud Network Mapper</h2>
+        <p>Visualise and disrupt criminal financial networks using machine learning-based entity resolution and graph analytics.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hs-value">247</span><span class="hs-label">Active Networks</span></div>
+        <div class="hero-stat"><span class="hs-value">1,842</span><span class="hs-label">Flagged Entities</span></div>
+        <div class="hero-stat"><span class="hs-value">‚¹183Cr</span><span class="hs-label">Total Exposure</span></div>
+      </div>
+    </div>
+
+    <div class="fraud-grid">
+      <!-- Search/Filter panel -->
+      <div class="card fraud-search-panel">
+        <div class="card-title">Network Search & Filter</div>
+        <div class="filter-group">
+          <label>Entity Type</label>
+          <div class="filter-chips">
+            <button class="chip active" id="ftype-all">All</button>
+            <button class="chip" id="ftype-person">Person</button>
+            <button class="chip" id="ftype-account">Account</button>
+            <button class="chip" id="ftype-device">Device</button>
+            <button class="chip" id="ftype-ip">IP Address</button>
+            <button class="chip" id="ftype-org">Organisation</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Risk Level</label>
+          <div class="risk-slider-wrap">
+            <input type="range" class="risk-slider" id="riskSlider" min="0" max="100" value="50" />
+            <div class="risk-labels"><span>Low</span><span>Critical</span></div>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Time Window</label>
+          <div class="filter-chips">
+            <button class="chip active" id="ftime-7d">7 Days</button>
+            <button class="chip" id="ftime-30d">30 Days</button>
+            <button class="chip" id="ftime-90d">90 Days</button>
+            <button class="chip" id="ftime-1y">1 Year</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Search Entity</label>
+          <div class="search-input-wrap">
+            <input type="text" class="filter-input" id="fraudSearchInput" placeholder="Name, account, phone, IP..." />
+            <button class="btn-primary" id="fraudSearchBtn">Search</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>AI Auto-cluster</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoCluster" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Large Network Viz -->
+      <div class="card fraud-network-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Live Network Graph · Cluster View</div>
+            <div class="card-subtitle">Click nodes to expand connections · Drag to explore</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-ghost" id="exportNetworkBtn">Export SVG</button>
+            <button class="btn-danger" id="flagNetworkBtn">Flag Network</button>
+          </div>
+        </div>
+        <div class="network-canvas-wrap large">
+          <canvas id="fraudNetworkCanvas"></canvas>
+          <div class="network-tooltip" id="networkTooltip"></div>
+        </div>
+      </div>
+
+      <!-- Entity Detail Panel -->
+      <div class="card fraud-entity-panel">
+        <div class="card-title">Entity Intelligence</div>
+        <div class="entity-detail" id="entityDetail">
+          <div class="entity-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/>
+            </svg>
+            <p>Click a node in the network graph to view entity details</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Network Stats -->
+      <div class="card fraud-stats-card">
+        <div class="card-title">Network Analytics</div>
+        <div class="chart-wrap"><canvas id="fraudAnalyticsChart"></canvas></div>
+      </div>
+
+      <!-- Top Networks Table -->
+      <div class="card fraud-table-card">
+        <div class="card-header">
+          <div class="card-title">High-Risk Network Clusters</div>
+          <button class="btn-ghost" id="exportFraudTable">Export CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="fraudNetworkTable">
+            <thead>
+              <tr>
+                <th>Network ID</th>
+                <th>Type</th>
+                <th>Entities</th>
+                <th>Exposure</th>
+                <th>Risk Score</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="fraudTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: COUNTERFEIT DETECTOR •••••••••••••••••••••••• -->
+  <div class="page" id="page-counterfeit">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">FORENSIC AI</div>
+        <h2>Counterfeit Currency Detector</h2>
+        <p>Upload currency images for multi-layer AI forensic analysis. Detect forgeries across all denominations with 99.6% accuracy.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hs-value">89</span><span class="hs-label">Cases This Month</span></div>
+        <div class="hero-stat"><span class="hs-value">99.6%</span><span class="hs-label">Detection Rate</span></div>
+        <div class="hero-stat"><span class="hs-value">‚¹2.4Cr</span><span class="hs-label">Seized Value</span></div>
+      </div>
+    </div>
+
+    <div class="counterfeit-grid">
+      <!-- Upload Zone -->
+      <div class="card counterfeit-upload">
+        <div class="card-title">Currency Analysis Upload</div>
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-icon">
+            <svg viewBox="0 0 48 48" fill="none">
+              <rect x="4" y="12" width="40" height="28" rx="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 24h16M24 32V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="20" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Upload Currency Image</h3>
+          <p>Drag & drop or click to upload front/back images</p>
+          <p class="upload-hint">Supports JPG, PNG, TIFF · Max 20MB</p>
+          <input type="file" id="currencyFileInput" accept="image/*" style="display:none" />
+          <button class="btn-primary" id="uploadBtn">Choose File</button>
+        </div>
+
+        <div class="denomination-selector">
+          <label>Select Denomination</label>
+          <div class="denom-chips">
+            <button class="chip active" id="denom-2000">‚¹2000</button>
+            <button class="chip" id="denom-500">‚¹500</button>
+            <button class="chip" id="denom-200">‚¹200</button>
+            <button class="chip" id="denom-100">‚¹100</button>
+            <button class="chip" id="denom-50">‚¹50</button>
+            <button class="chip" id="denom-20">‚¹20</button>
+          </div>
+        </div>
+
+        <button class="btn-primary full-width" id="analyzeBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/></svg>
+          Run AI Forensic Analysis
+        </button>
+      </div>
+
+      <!-- Analysis Results -->
+      <div class="card counterfeit-results">
+        <div class="card-title">Forensic Analysis Report</div>
+        <div class="analysis-panel" id="analysisPanel">
+          <div class="analysis-idle">
+            <div class="ai-brain-anim">
+              <div class="brain-ring r1"></div>
+              <div class="brain-ring r2"></div>
+              <div class="brain-ring r3"></div>
+              <div class="brain-core">AI</div>
+            </div>
+            <p>Upload a currency image and click Analyse to begin forensic scanning</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Features Checklist -->
+      <div class="card counterfeit-checklist">
+        <div class="card-title">Security Feature Analysis</div>
+        <div class="features-checklist" id="featuresChecklist">
+          <div class="feature-item pending" id="feat-watermark">
+            <div class="feat-icon">ðŸ”</div>
+            <div class="feat-info"><strong>Watermark Verification</strong><small>Gandhi portrait watermark</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-security-thread">
+            <div class="feat-icon">ðŸ§µ</div>
+            <div class="feat-info"><strong>Security Thread</strong><small>Windowed security thread</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-microprint">
+            <div class="feat-icon">ðŸ”¬</div>
+            <div class="feat-info"><strong>Microprint Text</strong><small>UV-reactive micro lettering</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-intaglio">
+            <div class="feat-icon">œ‹</div>
+            <div class="feat-info"><strong>Intaglio Printing</strong><small>Raised tactile print texture</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-serial">
+            <div class="feat-icon">ðŸ”¢</div>
+            <div class="feat-info"><strong>Serial Number Pattern</strong><small>Font spacing & ink density</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-optvar">
+            <div class="feat-icon">ðŸ’«</div>
+            <div class="feat-info"><strong>Optically Variable Ink</strong><small>Colour-shifting ink strip</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-fluorescent">
+            <div class="feat-icon">ðŸŒŸ</div>
+            <div class="feat-info"><strong>Fluorescent Fibres</strong><small>UV fluorescent security fibres</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+          <div class="feature-item pending" id="feat-seeline">
+            <div class="feat-icon">ðŸ‘ï¸</div>
+            <div class="feat-info"><strong>See-Through Register</strong><small>Floral pattern registration</small></div>
+            <div class="feat-status pending">PENDING</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection History Chart -->
+      <div class="card counterfeit-trends">
+        <div class="card-title">Counterfeit Detection Trends</div>
+        <div class="chart-wrap"><canvas id="counterTrendChart"></canvas></div>
+      </div>
+
+      <!-- Recent Cases -->
+      <div class="card counterfeit-cases">
+        <div class="card-header">
+          <div class="card-title">Recent Detection Cases</div>
+          <button class="btn-ghost" id="exportCounterCases">Export Report</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Case ID</th><th>Date</th><th>Denomination</th><th>Location</th><th>Confidence</th><th>Verdict</th></tr></thead>
+            <tbody id="counterCasesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: SCAM OPERATIONS •••••••••••••••••••••••• -->
+  <div class="page" id="page-scams">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">DISRUPTION ENGINE</div>
+        <h2>Scam Operations Monitor</h2>
+        <p>Track, analyse, and disrupt organised scam campaigns with AI-powered attribution, pattern detection, and automated takedown workflows.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hs-value">512</span><span class="hs-label">Active Campaigns</span></div>
+        <div class="hero-stat"><span class="hs-value">84</span><span class="hs-label">Neutralised Today</span></div>
+        <div class="hero-stat"><span class="hs-value">2.1M</span><span class="hs-label">Citizens Protected</span></div>
+      </div>
+    </div>
+
+    <div class="scams-grid">
+      <!-- Scam type breakdown -->
+      <div class="card scam-breakdown">
+        <div class="card-title">Scam Type Classification</div>
+        <div class="scam-type-list" id="scamTypeList"></div>
+      </div>
+
+      <!-- Active Campaigns Timeline -->
+      <div class="card scam-campaigns">
+        <div class="card-header">
+          <div class="card-title">Active Scam Campaigns</div>
+          <button class="btn-danger" id="bulkTakedownBtn">Bulk Takedown</button>
+        </div>
+        <div class="campaigns-list" id="campaignsList"></div>
+      </div>
+
+      <!-- Scam Trajectory Chart -->
+      <div class="card scam-chart">
+        <div class="card-title">Campaign Velocity & Impact</div>
+        <div class="chart-wrap"><canvas id="scamVelocityChart"></canvas></div>
+      </div>
+
+      <!-- Attribution Intelligence -->
+      <div class="card scam-attribution">
+        <div class="card-title">Attribution Intelligence</div>
+        <div class="attribution-panel" id="attributionPanel">
+          <div class="attrib-item">
+            <div class="attrib-label">Origin Clusters</div>
+            <div class="attrib-tags">
+              <span class="tag danger">West Africa (23%)</span>
+              <span class="tag warning">Southeast Asia (41%)</span>
+              <span class="tag info">Eastern Europe (18%)</span>
+              <span class="tag">Domestic (18%)</span>
+            </div>
+          </div>
+          <div class="attrib-item">
+            <div class="attrib-label">Infrastructure Used</div>
+            <div class="attrib-tags">
+              <span class="tag danger">VoIP Spoofing</span>
+              <span class="tag warning">Phishing Kits</span>
+              <span class="tag info">Mule Accounts</span>
+              <span class="tag">Crypto Mixers</span>
+              <span class="tag">Fake Domains</span>
+            </div>
+          </div>
+          <div class="attrib-item">
+            <div class="attrib-label">Target Demographics</div>
+            <div class="chart-wrap small"><canvas id="demographicsChart"></canvas></div>
+          </div>
+          <div class="attrib-item">
+            <div class="attrib-label">Platform Distribution</div>
+            <div class="platform-bars" id="platformBars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Takedown Tracker -->
+      <div class="card scam-takedown">
+        <div class="card-title">Takedown Tracker</div>
+        <div class="takedown-steps" id="takedownSteps"></div>
+      </div>
+
+      <!-- Scam Intelligence Report -->
+      <div class="card scam-intel">
+        <div class="card-header">
+          <div class="card-title">Intelligence Reports</div>
+          <button class="btn-ghost" id="generateReportBtn">Generate Report</button>
+        </div>
+        <div class="intel-list" id="intelList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: THREAT INTELLIGENCE •••••••••••••••••••••••• -->
+  <div class="page" id="page-threats">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">REAL-TIME</div>
+        <h2>Threat Intelligence Center</h2>
+        <p>Aggregated intelligence from global cybercrime databases, dark web monitoring, and cross-agency data sharing.</p>
+      </div>
+    </div>
+    <div class="threats-grid">
+      <!-- Threat Radar -->
+      <div class="card threats-radar">
+        <div class="card-title">Threat Radar</div>
+        <div class="chart-wrap"><canvas id="threatRadarChart"></canvas></div>
+      </div>
+      <!-- IOC Feed -->
+      <div class="card threats-ioc">
+        <div class="card-header">
+          <div class="card-title">Indicators of Compromise (IOCs)</div>
+          <span class="live-indicator"><span class="pulse-dot red"></span>LIVE FEED</span>
+        </div>
+        <div class="ioc-feed" id="iocFeed"></div>
+      </div>
+      <!-- Threat Actors -->
+      <div class="card threats-actors">
+        <div class="card-title">Known Threat Actors</div>
+        <div class="actors-list" id="actorsList"></div>
+      </div>
+      <!-- Vulnerability Radar -->
+      <div class="card threats-vulns">
+        <div class="card-title">Attack Vector Analysis</div>
+        <div class="chart-wrap"><canvas id="attackVectorChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: CASE MANAGEMENT •••••••••••••••••••••••• -->
+  <div class="page" id="page-cases">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">OPERATIONS</div>
+        <h2>Case Management System</h2>
+        <p>End-to-end case lifecycle management with AI-assisted evidence analysis, collaboration tools, and court-ready reporting.</p>
+      </div>
+    </div>
+    <div class="cases-grid">
+      <div class="card cases-filter-panel">
+        <div class="card-title">Filter Cases</div>
+        <div class="filter-group">
+          <label>Status</label>
+          <div class="filter-chips">
+            <button class="chip active" id="cstatus-all">All</button>
+            <button class="chip" id="cstatus-active">Active</button>
+            <button class="chip" id="cstatus-review">In Review</button>
+            <button class="chip" id="cstatus-closed">Closed</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Priority</label>
+          <div class="filter-chips">
+            <button class="chip danger" id="cprio-critical">Critical</button>
+            <button class="chip warning" id="cprio-high">High</button>
+            <button class="chip info" id="cprio-medium">Medium</button>
+            <button class="chip" id="cprio-low">Low</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Assigned To</label>
+          <select class="filter-select" id="caseAssignee">
+            <option value="">All Agents</option>
+            <option>Inspector Sharma</option>
+            <option>SI Patel</option>
+            <option>ASI Mehta</option>
+            <option>SI Kaur</option>
+          </select>
+        </div>
+        <button class="btn-primary full-width" id="newCaseBtn">+ New Case</button>
+      </div>
+      <div class="card cases-list-panel">
+        <div class="card-header">
+          <div class="card-title">Cases</div>
+          <span id="caseCountLabel">Showing 24 cases</span>
+        </div>
+        <div class="cases-list" id="casesList"></div>
+      </div>
+      <div class="card cases-detail-panel" id="caseDetailPanel">
+        <div class="case-detail-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+          <p>Select a case to view details</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: PREDICTIVE ANALYTICS •••••••••••••••••••••••• -->
+  <div class="page" id="page-analytics">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">PREDICTIVE AI</div>
+        <h2>Predictive Analytics Engine</h2>
+        <p>Machine learning models trained on 5 years of crime data generate forward-looking threat forecasts to enable pre-emptive action.</p>
+      </div>
+    </div>
+    <div class="analytics-grid">
+      <div class="card analytics-forecast">
+        <div class="card-title">Fraud Incident Forecast · Next 30 Days</div>
+        <div class="chart-wrap tall"><canvas id="forecastChart"></canvas></div>
+      </div>
+      <div class="card analytics-hotspots">
+        <div class="card-title">Predicted Hotspots</div>
+        <div class="hotspots-list" id="hotspotsList"></div>
+      </div>
+      <div class="card analytics-models">
+        <div class="card-title">Active ML Models</div>
+        <div class="models-list" id="modelsList"></div>
+      </div>
+      <div class="card analytics-correlation">
+        <div class="card-title">Threat Correlation Matrix</div>
+        <div class="chart-wrap"><canvas id="correlationChart"></canvas></div>
+      </div>
+      <div class="card analytics-risk-score">
+        <div class="card-title">District Risk Scores</div>
+        <div class="chart-wrap"><canvas id="districtRiskChart"></canvas></div>
+      </div>
+      <div class="card analytics-report-gen">
+        <div class="card-title">Automated Report Generation</div>
+        <div class="report-gen-panel" id="reportGenPanel">
+          <div class="filter-group"><label>Report Type</label>
+            <select class="filter-select" id="reportType">
+              <option>Weekly Intelligence Summary</option>
+              <option>Fraud Network Analysis</option>
+              <option>Counterfeit Currency Report</option>
+              <option>Scam Campaign Assessment</option>
+              <option>Predictive Risk Brief</option>
+            </select>
+          </div>
+          <div class="filter-group"><label>Time Period</label>
+            <select class="filter-select" id="reportPeriod">
+              <option>Last 7 Days</option>
+              <option>Last 30 Days</option>
+              <option>Last Quarter</option>
+              <option>Custom Range</option>
+            </select>
+          </div>
+          <div class="filter-group"><label>Format</label>
+            <div class="filter-chips">
+              <button class="chip active" id="fmt-pdf">PDF</button>
+              <button class="chip" id="fmt-docx">DOCX</button>
+              <button class="chip" id="fmt-json">JSON</button>
+              <button class="chip" id="fmt-csv">CSV</button>
+            </div>
+          </div>
+          <button class="btn-primary full-width" id="generateAnalyticsReport">
+            Generate AI Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: CITIZEN PORTAL •••••••••••••••••••••••• -->
+  <div class="page" id="page-citizen">
+    <div class="page-hero citizen-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">PUBLIC</div>
+        <h2>Citizen Safety Portal</h2>
+        <p>Report scams, verify suspicious contacts, check if you've been targeted, and get personalised fraud protection advice.</p>
+      </div>
+    </div>
+    <div class="citizen-grid">
+      <!-- Report Scam -->
+      <div class="card citizen-report">
+        <div class="card-title">Report a Scam or Fraud</div>
+        <form class="report-form" id="scamReportForm">
+          <div class="form-group">
+            <label for="reportType2">Type of Incident</label>
+            <select id="reportType2" class="filter-select">
+              <option value="">Select incident type...</option>
+              <option>Phone/SMS Scam</option>
+              <option>Email Phishing</option>
+              <option>Online Marketplace Fraud</option>
+              <option>Investment Scam</option>
+              <option>Bank Account Fraud</option>
+              <option>Counterfeit Currency</option>
+              <option>Job/Employment Fraud</option>
+              <option>KYC Fraud</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reportDesc">Description</label>
+            <textarea id="reportDesc" placeholder="Describe what happened in detail..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="suspectContact">Suspect Phone/Email/URL</label>
+            <input type="text" id="suspectContact" placeholder="+91-XXXXXXXXXX or domain.com" />
+          </div>
+          <div class="form-group">
+            <label for="lossAmount">Amount Lost (‚¹)</label>
+            <input type="number" id="lossAmount" placeholder="0 if no financial loss" />
+          </div>
+          <div class="form-group">
+            <label for="reporterPhone">Your Contact (for updates)</label>
+            <input type="tel" id="reporterPhone" placeholder="+91-XXXXXXXXXX" />
+          </div>
+          <button type="submit" class="btn-primary full-width">Submit Report</button>
+        </form>
+      </div>
+
+      <!-- Verify Contact -->
+      <div class="card citizen-verify">
+        <div class="card-title">Verify a Contact or Link</div>
+        <p class="card-subtitle-text">Check if a phone number, email, or URL is known to be associated with fraud.</p>
+        <div class="verify-input-group">
+          <input type="text" id="verifyInput" class="filter-input big" placeholder="Enter phone, email or URL..." />
+          <button class="btn-primary" id="verifyBtn">Check Now</button>
+        </div>
+        <div class="verify-result" id="verifyResult">
+          <div class="verify-idle">
+            <div class="verify-shield">
+              <svg viewBox="0 0 24 24" fill="none" width="48" height="48">
+                <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6l-8-4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
+            <p>Enter a contact to check its fraud risk score</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Self Check -->
+      <div class="card citizen-selfcheck">
+        <div class="card-title">Am I At Risk?</div>
+        <p class="card-subtitle-text">Check if your phone number or email appears in known data breaches or fraud databases.</p>
+        <div class="self-check-form">
+          <div class="form-group">
+            <label>Check Type</label>
+            <div class="filter-chips">
+              <button class="chip active" id="selfcheck-phone">Phone Number</button>
+              <button class="chip" id="selfcheck-email">Email Address</button>
+            </div>
+          </div>
+          <input type="text" id="selfCheckInput" class="filter-input" placeholder="Enter your phone or email..." />
+          <button class="btn-primary full-width" id="selfCheckBtn">Check My Safety</button>
+        </div>
+        <div class="self-check-result" id="selfCheckResult"></div>
+      </div>
+
+      <!-- Awareness Tips -->
+      <div class="card citizen-tips">
+        <div class="card-title">Fraud Protection Tips</div>
+        <div class="tips-carousel" id="tipsCarousel"></div>
+        <div class="tips-nav">
+          <button class="tip-nav-btn" id="tipPrev">†</button>
+          <div class="tip-dots" id="tipDots"></div>
+          <button class="tip-nav-btn" id="tipNext">†’</button>
+        </div>
+      </div>
+
+      <!-- National Helplines -->
+      <div class="card citizen-helplines">
+        <div class="card-title">National Helplines</div>
+        <div class="helplines-list">
+          <div class="helpline-item">
+            <div class="helpline-icon cyber">ðŸš¨</div>
+            <div class="helpline-info"><strong>Cyber Crime Helpline</strong><span>1930 · 24Ã—7</span></div>
+            <a href="tel:1930" class="btn-ghost small">Call Now</a>
+          </div>
+          <div class="helpline-item">
+            <div class="helpline-icon fin">ðŸ¦</div>
+            <div class="helpline-info"><strong>RBI Banking Fraud</strong><span>14440 · Business hours</span></div>
+            <a href="tel:14440" class="btn-ghost small">Call Now</a>
+          </div>
+          <div class="helpline-item">
+            <div class="helpline-icon police">ðŸ‘®</div>
+            <div class="helpline-info"><strong>National Police</strong><span>100 · Emergency</span></div>
+            <a href="tel:100" class="btn-ghost small">Call Now</a>
+          </div>
+          <div class="helpline-item">
+            <div class="helpline-icon ncsc">ðŸ”’</div>
+            <div class="helpline-info"><strong>CERT-In</strong><span>incidents@cert-in.org.in</span></div>
+            <a href="mailto:incidents@cert-in.org.in" class="btn-ghost small">Email</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scam Awareness Quiz -->
+      <div class="card citizen-quiz">
+        <div class="card-title">Fraud Awareness Quiz</div>
+        <div class="quiz-panel" id="quizPanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- •••••••••••••••••••••••• PAGE: SETTINGS •••••••••••••••••••••••• -->
+  <div class="page" id="page-settings">
+    <div class="page-hero">
+      <div class="page-hero-content">
+        <div class="hero-badge">SYSTEM</div>
+        <h2>Platform Settings</h2>
+        <p>Configure AI models, data sources, alert thresholds, and integration APIs.</p>
+      </div>
+    </div>
+    <div class="settings-grid">
+      <div class="card settings-ai">
+        <div class="card-title">AI Model Configuration</div>
+        <div class="settings-list">
+          <div class="setting-item">
+            <div class="setting-info"><strong>Fraud Detection Model</strong><small>Random Forest + Neural Network ensemble</small></div>
+            <div class="setting-control">
+              <span class="status-badge active">Active</span>
+              <button class="btn-ghost small">Configure</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>Network Graph Analysis</strong><small>Graph Neural Network · v3.2.1</small></div>
+            <div class="setting-control">
+              <span class="status-badge active">Active</span>
+              <button class="btn-ghost small">Configure</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>Currency Forensics Model</strong><small>CNN + Transformer · 99.6% accuracy</small></div>
+            <div class="setting-control">
+              <span class="status-badge active">Active</span>
+              <button class="btn-ghost small">Configure</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>NLP Scam Classifier</strong><small>BERT-based multilingual · 21 languages</small></div>
+            <div class="setting-control">
+              <span class="status-badge warning">Training</span>
+              <button class="btn-ghost small">Configure</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>Predictive Threat Engine</strong><small>LSTM time-series + regression</small></div>
+            <div class="setting-control">
+              <span class="status-badge active">Active</span>
+              <button class="btn-ghost small">Configure</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card settings-alerts">
+        <div class="card-title">Alert Thresholds</div>
+        <div class="settings-list">
+          <div class="setting-item">
+            <div class="setting-info"><strong>Fraud Risk Score Alert</strong><small>Trigger alert above threshold</small></div>
+            <div class="setting-control"><input type="range" min="0" max="100" value="75" class="risk-slider" id="fraudAlertThresh" /><span class="slider-val">75</span></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>Network Cluster Size</strong><small>Min entities to flag a cluster</small></div>
+            <div class="setting-control"><input type="range" min="2" max="50" value="5" class="risk-slider" id="clusterSizeThresh" /><span class="slider-val">5</span></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><strong>Confidence Threshold</strong><small>Min confidence for alerts</small></div>
+            <div class="setting-control"><input type="range" min="50" max="100" value="85" class="risk-slider" id="confThresh" /><span class="slider-val">85%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card settings-integrations">
+        <div class="card-title">Data Source Integrations</div>
+        <div class="integrations-list">
+          <div class="integration-item connected"><div class="int-icon">ðŸ¦</div><div class="int-info"><strong>RBI Banking Data Feed</strong><small>Real-time transaction flags</small></div><span class="status-badge active">Connected</span></div>
+          <div class="integration-item connected"><div class="int-icon">ðŸŒ</div><div class="int-info"><strong>CERT-In Threat Intelligence</strong><small>IOC & vulnerability data</small></div><span class="status-badge active">Connected</span></div>
+          <div class="integration-item connected"><div class="int-icon">ðŸ“±</div><div class="int-info"><strong>TRAI Call Fraud Database</strong><small>Spam call registry</small></div><span class="status-badge active">Connected</span></div>
+          <div class="integration-item"><div class="int-icon">ðŸ”</div><div class="int-info"><strong>NATGRID</strong><small>National intelligence grid</small></div><span class="status-badge warning">Pending Auth</span></div>
+          <div class="integration-item"><div class="int-icon">ðŸŒ</div><div class="int-info"><strong>INTERPOL I-24/7</strong><small>International crime data</small></div><span class="status-badge warning">Pending Auth</span></div>
+          <div class="integration-item"><div class="int-icon">ðŸ’°</div><div class="int-info"><strong>FIU-IND</strong><small>Financial intelligence unit</small></div><span class="status-badge active">Connected</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- NOTIFICATION TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- NEW CASE MODAL -->
+<div class="modal-overlay" id="newCaseModal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create New Case</h3>
+      <button class="modal-close" id="closeNewCase">œ•</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Case Title</label>
+        <input type="text" class="filter-input" id="newCaseTitle" placeholder="Brief case title..." />
+      </div>
+      <div class="form-group">
+        <label>Case Type</label>
+        <select class="filter-select" id="newCaseType">
+          <option>Digital Fraud</option>
+          <option>Counterfeit Currency</option>
+          <option>Scam Campaign</option>
+          <option>Money Laundering</option>
+          <option>Identity Theft</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Priority</label>
+        <div class="filter-chips">
+          <button class="chip danger" id="nprio-critical">Critical</button>
+          <button class="chip warning active" id="nprio-high">High</button>
+          <button class="chip info" id="nprio-medium">Medium</button>
+          <button class="chip" id="nprio-low">Low</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Assign To</label>
+        <select class="filter-select" id="newCaseAssign">
+          <option>Inspector Sharma</option>
+          <option>SI Patel</option>
+          <option>ASI Mehta</option>
+          <option>SI Kaur</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="newCaseDesc" placeholder="Initial case description and available intelligence..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="cancelNewCase">Cancel</button>
+      <button class="btn-primary" id="submitNewCase">Create Case</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof bootPlatform === "function") bootPlatform(); else SENTINEL.initWS();
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) logoutBtn.addEventListener("click", async () => {
+      try { await SENTINEL.api("/api/auth/logout", { method: "POST" }); } catch(_){}
+      localStorage.removeItem("sentinel_token");
+      localStorage.removeItem("sentinel_user");
+      window.location.href = "/login.html";
+    });
+  });
+</script>
+</body>
+</html>
+
+
+

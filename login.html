@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — SENTINEL AI Intelligence Platform</title>
+  <meta name="description" content="Secure login portal for SENTINEL AI Digital Public Safety Intelligence Platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050d1a;
+      --card: #080f1f;
+      --border: rgba(0,212,255,0.12);
+      --cyan: #00d4ff;
+      --blue: #0066ff;
+      --purple: #7c3aed;
+      --red: #ff1744;
+      --green: #00e676;
+      --text: #e8f4ff;
+      --muted: rgba(232,244,255,0.45);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Particle canvas */
+    #loginCanvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* Ambient glows */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0,102,255,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(124,58,237,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(0,212,255,0.04) 0%, transparent 70%);
+    }
+
+    .login-wrap {
+      position: relative; z-index: 10;
+      display: flex;
+      gap: 0;
+      width: min(960px, 96vw);
+      min-height: 560px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--border), 0 0 60px rgba(0,212,255,0.06);
+    }
+
+    /* ── Left panel ── */
+    .login-left {
+      flex: 1;
+      background: linear-gradient(160deg, rgba(0,102,255,0.18) 0%, rgba(124,58,237,0.12) 50%, rgba(0,212,255,0.08) 100%);
+      border-right: 1px solid var(--border);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .brand-shield {
+      width: 48px; height: 48px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .brand-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--cyan);
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .login-headline {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #e8f4ff, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .login-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 340px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(232,244,255,0.7);
+    }
+
+    .feature-dot {
+      width: 6px; height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+      flex-shrink: 0;
+    }
+
+    .login-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .ls-item { text-align: center; }
+    .ls-value { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: var(--cyan); }
+    .ls-label { font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 0.5px; }
+
+    /* ── Right panel ── */
+    .login-right {
+      width: 380px;
+      background: var(--card);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: rgba(0,212,255,0.5);
+      background: rgba(0,212,255,0.04);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    }
+
+    .form-input::placeholder { color: rgba(232,244,255,0.25); }
+
+    .role-select-group {
+      margin-bottom: 18px;
+    }
+
+    .role-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .role-chip {
+      flex: 1;
+      min-width: 80px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: rgba(232,244,255,0.6);
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .role-chip:hover { border-color: rgba(0,212,255,0.3); color: var(--text); }
+
+    .role-chip.active {
+      background: rgba(0,212,255,0.12);
+      border-color: rgba(0,212,255,0.5);
+      color: var(--cyan);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0);
+      transition: 0.2s;
+    }
+
+    .login-btn:hover::before { background: rgba(255,255,255,0.1); }
+    .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,102,255,0.4); }
+    .login-btn:active { transform: none; }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .login-error {
+      background: rgba(255,23,68,0.1);
+      border: 1px solid rgba(255,23,68,0.3);
+      color: var(--red);
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .demo-creds {
+      margin-top: 20px;
+      padding: 12px;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .demo-creds strong { color: var(--cyan); display: block; margin-bottom: 6px; font-size: 10px; letter-spacing: 1px; }
+
+    .demo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .demo-fill {
+      background: none;
+      border: none;
+      color: rgba(0,212,255,0.7);
+      font-size: 10px;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .demo-fill:hover { color: var(--cyan); }
+
+    .loading-spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--green);
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.25);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-bottom: 24px;
+    }
+
+    .live-dot {
+      width: 5px; height: 5px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: live-pulse 1.5s infinite;
+    }
+
+    @keyframes live-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,230,118,0.5); }
+      50% { box-shadow: 0 0 0 4px rgba(0,230,118,0); }
+    }
+
+    .security-notice {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .login-left { display: none; }
+      .login-right { width: 100%; }
+      .login-wrap { width: min(400px, 96vw); }
+    }
+  </style>
+</head>
+<body>
+<canvas id="loginCanvas"></canvas>
+
+<div class="login-wrap">
+  <!-- Left: Hero -->
+  <div class="login-left">
+    <div>
+      <div class="brand-logo">
+        <div class="brand-shield">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L3 7.5V14C3 19.55 7.84 24.74 14 26C20.16 24.74 25 19.55 25 14V7.5L14 2Z" fill="rgba(0,212,255,0.15)" stroke="rgba(0,212,255,0.6)" stroke-width="0.8"/>
+            <path d="M10 14L13 17L18 11" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">SENTINEL</div>
+          <div class="brand-tagline">AI Intelligence Platform</div>
+        </div>
+      </div>
+
+      <div class="login-headline">Digital Public<br/>Safety Intelligence</div>
+      <p class="login-desc">
+        AI-powered platform equipping law enforcement agencies, financial institutions, and citizens with proactive tools to detect, disrupt, and respond to digital threats.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature-item"><div class="feature-dot"></div><span>Real-time fraud network detection & mapping</span></div>
+        <div class="feature-item"><div class="feature-dot"></div><span>AI-powered counterfeit currency forensics</span></div>
+        <div class="feature-item"><div class="feature-dot"></div><span>Scam campaign monitoring & automated takedown</span></div>
+        <div class="feature-item"><div class="feature-dot"></div><span>Predictive threat intelligence & forecasting</span></div>
+        <div class="feature-item"><div class="feature-dot"></div><span>End-to-end case management for law enforcement</span></div>
+        <div class="feature-item"><div class="feature-dot"></div><span>Citizen safety portal & fraud reporting</span></div>
+      </div>
+    </div>
+
+    <div class="login-stats">
+      <div class="ls-item"><div class="ls-value" id="statThreats">2,847</div><div class="ls-label">Active Threats</div></div>
+      <div class="ls-item"><div class="ls-value" id="statNetworks">183</div><div class="ls-label">Networks Mapped</div></div>
+      <div class="ls-item"><div class="ls-value" id="statCases">10</div><div class="ls-label">Open Cases</div></div>
+    </div>
+  </div>
+
+  <!-- Right: Login Form -->
+  <div class="login-right">
+    <div class="live-badge"><div class="live-dot"></div>SYSTEM ONLINE</div>
+
+    <div class="login-title">Secure Access</div>
+    <div class="login-subtitle">Enter your credentials to access the intelligence platform</div>
+
+    <div class="role-select-group">
+      <label class="form-label">Access Role</label>
+      <div class="role-chips">
+        <button class="role-chip active" data-role="admin">Admin</button>
+        <button class="role-chip" data-role="analyst">Analyst</button>
+        <button class="role-chip" data-role="financial">Financial</button>
+        <button class="role-chip" data-role="citizen">Citizen</button>
+      </div>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" id="username" class="form-input" placeholder="Enter your username" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Enter your password" autocomplete="current-password" required />
+      </div>
+
+      <button type="submit" class="login-btn" id="loginBtn">
+        <span class="loading-spinner" id="loginSpinner"></span>
+        <span id="loginBtnText">Access Platform</span>
+      </button>
+
+      <div class="login-error" id="loginError"></div>
+    </form>
+
+    <div class="demo-creds">
+      <strong>🔐 DEMO CREDENTIALS</strong>
+      <div class="demo-row">
+        <span>Admin:</span>
+        <button class="demo-fill" onclick="fillCreds('admin','Sentinel@2024')">admin / Sentinel@2024</button>
+      </div>
+      <div class="demo-row">
+        <span>Analyst:</span>
+        <button class="demo-fill" onclick="fillCreds('sharma_i','Sentinel@2024')">sharma_i / Sentinel@2024</button>
+      </div>
+      <div class="demo-row">
+        <span>Citizen:</span>
+        <button class="demo-fill" onclick="fillCreds('citizen1','Sentinel@2024')">citizen1 / Sentinel@2024</button>
+      </div>
+    </div>
+
+    <div class="security-notice">
+      <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+      256-bit encrypted · Government grade security
+    </div>
+  </div>
+</div>
+
+<script>
+  // Particle animation
+  const canvas = document.getElementById('loginCanvas');
+  const ctx    = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function createParticles(n) {
+    particles = Array.from({ length: n }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      size: Math.random() * 1.5 + 0.5,
+      alpha: Math.random() * 0.4 + 0.1,
+      color: Math.random() < 0.6 ? '0,212,255' : Math.random() < 0.5 ? '0,102,255' : '124,58,237',
+    }));
+  }
+
+  createParticles(80);
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+      ctx.fill();
+
+      // Draw connections
+      particles.slice(i + 1).forEach(q => {
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(0,212,255,${(1 - dist/120) * 0.06})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+    requestAnimationFrame(animateParticles);
+  }
+
+  animateParticles();
+
+  // Role chip selection
+  document.querySelectorAll('.role-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const creds = {
+        admin: ['admin', 'Sentinel@2024'],
+        analyst: ['sharma_i', 'Sentinel@2024'],
+        financial: ['rbi_user', 'Sentinel@2024'],
+        citizen: ['citizen1', 'Sentinel@2024'],
+      };
+      const c = creds[chip.dataset.role];
+      if (c) fillCreds(c[0], c[1]);
+    });
+  });
+
+  function fillCreds(user, pass) {
+    document.getElementById('username').value = user;
+    document.getElementById('password').value = pass;
+  }
+
+  // Login form
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn      = document.getElementById('loginBtn');
+    const spinner  = document.getElementById('loginSpinner');
+    const btnText  = document.getElementById('loginBtnText');
+    const errorEl  = document.getElementById('loginError');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    btnText.textContent = 'Authenticating...';
+    errorEl.style.display = 'none';
+
+    try {
+      const res  = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Authentication failed');
+      }
+
+      // Store token and user
+      localStorage.setItem('sentinel_token', data.token);
+      localStorage.setItem('sentinel_user',  JSON.stringify(data.user));
+
+      btnText.textContent = '✓ Access Granted — Redirecting...';
+      btn.style.background = 'linear-gradient(135deg, #00e676, #00b248)';
+
+      setTimeout(() => { window.location.href = '/'; }, 800);
+
+    } catch (err) {
+      errorEl.textContent = '⚠ ' + err.message;
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = 'Access Platform';
+      // Shake animation
+      document.getElementById('loginForm').style.animation = 'none';
+      setTimeout(() => document.getElementById('loginForm').style.animation = '', 100);
+    }
+  });
+
+  // Fetch live stats for display
+  (async () => {
+    try {
+      const r = await fetch('/api/health');
+      const d = await r.json();
+      if (d.stats) {
+        const el = document.getElementById('statCases');
+        if (el) el.textContent = d.stats.active_cases || 10;
+      }
+    } catch(_) {}
+  })();
+</script>
+</body>
+</html>
